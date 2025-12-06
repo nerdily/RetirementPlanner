@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Planning Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --stripe-blue: #635BFF;
+            --stripe-blue-hover: #5851EB;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --green: #10B981;
+            --red: #EF4444;
+            --amber: #F59E0B;
+            --purple: #8B5CF6;
+            --cyan: #06B6D4;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, var(--gray-50), #FFFFFF);
+            color: var(--gray-900);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 56px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+            letter-spacing: -0.025em;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            font-weight: 400;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--gray-900);
+            background: #FFFFFF;
+            transition: all 0.15s;
+        }
+
+        input[type="number"]:hover {
+            border-color: var(--gray-400);
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--stripe-blue);
+            box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
+        }
+
+        .hint {
+            font-size: 0.8125rem;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--gray-200);
+            margin: 24px 0;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--stripe-blue);
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--stripe-blue-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 91, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--green);
+            color: #FFFFFF;
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--gray-50);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            letter-spacing: -0.02em;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 28px;
+        }
+
+        .ai-panel {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+            border: 1px solid #A7F3D0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 28px;
+        }
+
+        .ai-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .ai-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--stripe-blue), var(--purple));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 13px;
+        }
+
+        .ai-content {
+            color: var(--gray-700);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-description {
+            font-size: 0.9375rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .scenario-card {
+            background: #FFFFFF;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--stripe-blue);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .scenario-card.active {
+            border-color: var(--stripe-blue);
+            background: linear-gradient(135deg, #F5F3FF 0%, #FFFFFF 100%);
+            box-shadow: 0 4px 16px rgba(99, 91, 255, 0.15);
+        }
+
+        .scenario-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .scenario-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+        }
+
+        .scenario-return {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .scenario-return.positive {
+            color: var(--green);
+        }
+
+        .scenario-return.negative {
+            color: var(--red);
+        }
+
+        .scenario-description {
+            font-size: 0.8125rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .metric-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .metric-item {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s;
+        }
+
+        .metric-item:hover {
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-item-label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+
+        .metric-item-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            letter-spacing: -0.02em;
+        }
+
+        .metric-item-change {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
+            border: 1px solid #FECACA;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .warning-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--red);
+            margin-bottom: 8px;
+        }
+
+        .warning-content {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .timeline-item {
+            background: #FFFFFF;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            border-color: var(--stripe-blue);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transform: translateX(4px);
+        }
+
+        .timeline-age {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .timeline-account {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+        }
+
+        .timeline-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .timeline-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8125rem;
+        }
+
+        .timeline-stat-label {
+            color: var(--gray-500);
+        }
+
+        .timeline-stat-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .tip-item {
+            padding: 16px 0 16px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            position: relative;
+            color: var(--gray-700);
+            line-height: 1.6;
+            font-size: 0.9375rem;
+        }
+
+        .tip-item:last-child {
+            border-bottom: none;
+        }
+
+        .tip-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--stripe-blue);
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #FCD34D;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(3, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid,
+            .strategy-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 16px 60px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Retirement Planning Calculator</h1>
+            <p class="subtitle">Model your retirement savings and optimize your withdrawal strategy</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2 class="card-title">Your information</h2>
+                
+                <div class="input-group">
+                    <label>Current age</label>
+                    <input type="number" id="currentAge" value="35" min="18" max="100">
+                </div>
+
+                <div class="input-group">
+                    <label>Your retirement age</label>
+                    <input type="number" id="retirementAge" value="65" min="50" max="100">
+                </div>
+
+                <div class="input-group">
+                    <label>Spouse's current age</label>
+                    <input type="number" id="spouseAge" value="29" min="18" max="100">
+                </div>
+
+                <div class="input-group">
+                    <label>Spouse's retirement age</label>
+                    <input type="number" id="spouseRetirementAge" value="65" min="50" max="100">
+                    <div class="hint">Can retire same time as you or at same age</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">Your accounts</h3>
+
+                <div class="input-group">
+                    <label>Traditional 401(k) balance</label>
+                    <input type="number" id="balance401k" value="250000" min="0" step="1000">
+                    <div class="hint">Tax-deferred, subject to RMDs at 73</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Roth IRA balance</label>
+                    <input type="number" id="balanceRoth" value="100000" min="0" step="1000">
+                    <div class="hint">Tax-free withdrawals, no RMDs</div>
+                </div>
+
+                <div class="input-group">
+                    <label>HSA balance</label>
+                    <input type="number" id="balanceHSA" value="50000" min="0" step="1000">
+                    <div class="hint">Triple tax advantage</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Taxable brokerage balance</label>
+                    <input type="number" id="balanceTaxable" value="150000" min="0" step="1000">
+                    <div class="hint">Capital gains tax, flexible access</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">Spouse's accounts</h3>
+
+                <div class="input-group">
+                    <label>Rollover IRA balance</label>
+                    <input type="number" id="spouseRolloverIRA" value="150000" min="0" step="1000">
+                    <div class="hint">Tax-deferred, subject to RMDs at 73</div>
+                </div>
+
+                <div class="input-group">
+                    <label>SEP-IRA balance</label>
+                    <input type="number" id="spouseSEPIRA" value="80000" min="0" step="1000">
+                    <div class="hint">Self-employed retirement, RMDs at 73</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Roth IRA balance</label>
+                    <input type="number" id="spouseRothIRA" value="75000" min="0" step="1000">
+                    <div class="hint">Tax-free withdrawals, no RMDs</div>
+                </div>
+
+                <div class="input-group">
+                    <label>HSA balance</label>
+                    <input type="number" id="spouseHSA" value="40000" min="0" step="1000">
+                    <div class="hint">Triple tax advantage</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Taxable brokerage balance</label>
+                    <input type="number" id="spouseTaxable" value="100000" min="0" step="1000">
+                    <div class="hint">Capital gains tax, flexible access</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Fidelity annuity balance</label>
+                    <input type="number" id="spouseAnnuity" value="50000" min="0" step="1000">
+                    <div class="hint">Tax-deferred, penalty before 59½</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">Annual contributions</h3>
+
+                <div class="input-group">
+                    <label>Annual 401(k) contribution</label>
+                    <input type="number" id="contrib401k" value="10000" min="0" step="500">
+                    <div class="hint">2024 limit: $23,000 ($30,500 if 50+)</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Employer match</label>
+                    <input type="number" id="employerMatch" value="5000" min="0" step="500">
+                </div>
+
+                <div class="input-group">
+                    <label>Annual Roth IRA contribution</label>
+                    <input type="number" id="contribRoth" value="7000" min="0" step="500">
+                    <div class="hint">2024 limit: $7,000 ($8,000 if 50+)</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Annual HSA contribution</label>
+                    <input type="number" id="contribHSA" value="4150" min="0" step="100">
+                    <div class="hint">2024 limit: $4,150 individual, $8,300 family</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Annual taxable contribution</label>
+                    <input type="number" id="contribTaxable" value="5000" min="0" step="500">
+                </div>
+
+                <div style="margin-top: 16px; margin-bottom: 8px;">
+                    <h4 style="font-size: 0.8125rem; font-weight: 600; color: var(--gray-600);">Spouse contributions</h4>
+                </div>
+
+                <div class="input-group">
+                    <label>Annual SEP-IRA contribution</label>
+                    <input type="number" id="spouseContribSEP" value="8000" min="0" step="500">
+                    <div class="hint">2024 limit: 25% of compensation, max $69,000</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Annual Roth IRA contribution</label>
+                    <input type="number" id="spouseContribRoth" value="7000" min="0" step="500">
+                </div>
+
+                <div class="input-group">
+                    <label>Annual HSA contribution</label>
+                    <input type="number" id="spouseContribHSA" value="4150" min="0" step="100">
+                </div>
+
+                <div class="input-group">
+                    <label>Annual taxable contribution</label>
+                    <input type="number" id="spouseContribTaxable" value="3000" min="0" step="500">
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="input-group">
+                    <label>Expected annual return (%)</label>
+                    <input type="number" id="returnRate" value="7" min="0" max="20" step="0.5">
+                    <div class="hint">Historical average: 7-10%</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Tax bracket in retirement (%)</label>
+                    <input type="number" id="taxBracket" value="22" min="0" max="37" step="1">
+                </div>
+
+                <div class="input-group">
+                    <label>Capital gains tax rate (%)</label>
+                    <input type="number" id="capitalGainsRate" value="15" min="0" max="20" step="5">
+                </div>
+
+                <div class="input-group">
+                    <label>Taxable account cost basis (%)</label>
+                    <input type="number" id="costBasis" value="70" min="0" max="100" step="5">
+                    <div class="hint">% that is cost basis (not gains)</div>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculateAll()">Calculate projection</button>
+                <button class="btn btn-secondary" onclick="getAIInsights()">Get AI insights</button>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Growth projection</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">At retirement</div>
+                        <div class="stat-value" id="finalBalance">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total contributed</div>
+                        <div class="stat-value" id="totalContributions">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Investment gains</div>
+                        <div class="stat-value" id="investmentGrowth">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Years to go</div>
+                        <div class="stat-value" id="yearsToRetirement">0</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="growthChart"></canvas>
+                </div>
+
+                <div class="ai-panel" id="aiInsights" style="display: none;">
+                    <div class="ai-title">
+                        <div class="ai-icon">✨</div>
+                        <span>AI-powered insights</span>
+                    </div>
+                    <div class="ai-content" id="aiContent">
+                        <span class="loading">Analyzing your strategy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="card">
+                <div class="section-header">
+                    <h2 class="section-title">Tax-optimized withdrawal strategy</h2>
+                    <p class="section-description">
+                        Strategic withdrawal order can save tens of thousands in taxes. This analysis considers your tax bracket, 
+                        RMD requirements, and capital gains rates to recommend an optimal sequence.
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total at retirement</div>
+                        <div class="stat-value" id="totalRetirement">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Annual withdrawal (6%)</div>
+                        <div class="stat-value" id="annualWithdrawal">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Est. annual taxes</div>
+                        <div class="stat-value" id="estimatedTaxes">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Net after-tax income</div>
+                        <div class="stat-value" id="netIncome">$0</div>
+                    </div>
+                </div>
+
+                <div class="strategy-grid">
+                    <div>
+                        <h3 class="card-title">Recommended withdrawal order</h3>
+                        <div class="timeline" id="withdrawalTimeline"></div>
+                    </div>
+                    <div>
+                        <h3 class="card-title">Annual withdrawal breakdown by account</h3>
+                        <div class="chart-container" style="height: 350px;">
+                            <canvas id="strategyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <h3 class="card-title">Required minimum distributions (RMDs)</h3>
+                    <div id="rmdInfo"></div>
+                </div>
+
+                <div class="info-box" style="margin-top: 24px;">
+                    <h3 class="card-title">Tax optimization tips</h3>
+                    <div class="tips-list" id="taxTips"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="card">
+                <div class="section-header">
+                    <h2 class="section-title">Sequence of returns risk analysis</h2>
+                    <p class="section-description">
+                        The first 5 years of retirement are critical. Poor market returns early in retirement while withdrawing funds 
+                        can significantly impact your portfolio's longevity. Select a scenario to see how different market conditions 
+                        affect your retirement at a 6% withdrawal rate.
+                    </p>
+                </div>
+
+                <div class="scenario-grid">
+                    <div class="scenario-card active" id="scenarioBelow" onclick="selectScenario('below')">
+                        <div class="scenario-label">Below average</div>
+                        <div class="scenario-title">Bear market</div>
+                        <div class="scenario-return negative">-2.5% avg</div>
+                        <div class="scenario-description">
+                            Similar to 2000-2004 or 2008-2012. Severe early losses test portfolio sustainability.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card" id="scenarioAverage" onclick="selectScenario('average')">
+                        <div class="scenario-label">Average</div>
+                        <div class="scenario-title">Steady market</div>
+                        <div class="scenario-return">+10.2% avg</div>
+                        <div class="scenario-description">
+                            Historical S&P 500 average. Normal volatility with typical long-term performance.
+                        </div>
+                    </div>
+
+                    <div class="scenario-card" id="scenarioAbove" onclick="selectScenario('above')">
+                        <div class="scenario-label">Above average</div>
+                        <div class="scenario-title">Bull market</div>
+                        <div class="scenario-return positive">+18.5% avg</div>
+                        <div class="scenario-description">
+                            Similar to 1995-1999 or 2013-2017. Strong sustained growth in early years.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-grid">
+                    <div>
+                        <div class="chart-container" style="height: 350px;">
+                            <canvas id="drawdownChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="metric-list">
+                            <div class="metric-item">
+                                <div class="metric-item-label">Balance after 5 years</div>
+                                <div class="metric-item-value" id="finalRetirementBalance">$0</div>
+                                <div class="metric-item-change" id="balanceChange">0% from start</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-item-label">Total withdrawn</div>
+                                <div class="metric-item-value" id="totalWithdrawn">$0</div>
+                                <div class="metric-item-change">Over 5 years at 6% annually</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-item-label">Net portfolio change</div>
+                                <div class="metric-item-value" id="netChange">$0</div>
+                                <div class="metric-item-change" id="netChangeDescription">Net change</div>
+                            </div>
+                        </div>
+
+                        <div class="warning" id="warningBox" style="display: none;">
+                            <div class="warning-title">
+                                <span>⚠️</span>
+                                <span>Sequence risk alert</span>
+                            </div>
+                            <div class="warning-content" id="warningContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let growthChart = null;
+        let strategyChart = null;
+        let drawdownChart = null;
+        let currentScenario = 'below';
+
+        const marketScenarios = {
+            below: {
+                returns: [-9.1, -11.9, -22.1, 28.7, 10.9],
+                avgReturn: -2.5
+            },
+            average: {
+                returns: [12.0, 8.5, 10.2, 9.8, 11.5],
+                avgReturn: 10.2
+            },
+            above: {
+                returns: [37.6, 23.0, 33.4, 28.6, 21.0],
+                avgReturn: 18.5
+            }
+        };
+
+        const rmdDivisors = {
+            73: 26.5, 74: 25.5, 75: 24.6, 76: 23.7, 77: 22.9,
+            78: 22.0, 79: 21.1, 80: 20.2, 81: 19.4, 82: 18.5,
+            83: 17.7, 84: 16.8, 85: 16.0, 86: 15.2, 87: 14.4
+        };
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function getRetirementBalances() {
+            const currentAge = parseInt(document.getElementById('currentAge').value) || 35;
+            const retirementAge = parseInt(document.getElementById('retirementAge').value) || 65;
+            const spouseAge = parseInt(document.getElementById('spouseAge').value) || 29;
+            const spouseRetirementAge = parseInt(document.getElementById('spouseRetirementAge').value) || 65;
+            
+            const yearsToRetirement = retirementAge - currentAge;
+            const spouseYearsToRetirement = spouseRetirementAge - spouseAge;
+            const returnRate = parseFloat(document.getElementById('returnRate').value) / 100 || 0.07;
+            
+            // Your accounts
+            const balance401k = parseFloat(document.getElementById('balance401k').value) || 0;
+            const balanceRoth = parseFloat(document.getElementById('balanceRoth').value) || 0;
+            const balanceHSA = parseFloat(document.getElementById('balanceHSA').value) || 0;
+            const balanceTaxable = parseFloat(document.getElementById('balanceTaxable').value) || 0;
+            
+            // Spouse accounts
+            const spouseRolloverIRA = parseFloat(document.getElementById('spouseRolloverIRA').value) || 0;
+            const spouseSEPIRA = parseFloat(document.getElementById('spouseSEPIRA').value) || 0;
+            const spouseRothIRA = parseFloat(document.getElementById('spouseRothIRA').value) || 0;
+            const spouseHSA = parseFloat(document.getElementById('spouseHSA').value) || 0;
+            const spouseTaxable = parseFloat(document.getElementById('spouseTaxable').value) || 0;
+            const spouseAnnuity = parseFloat(document.getElementById('spouseAnnuity').value) || 0;
+            
+            // Your contributions
+            const contrib401k = parseFloat(document.getElementById('contrib401k').value) || 0;
+            const employerMatch = parseFloat(document.getElementById('employerMatch').value) || 0;
+            const contribRoth = parseFloat(document.getElementById('contribRoth').value) || 0;
+            const contribHSA = parseFloat(document.getElementById('contribHSA').value) || 0;
+            const contribTaxable = parseFloat(document.getElementById('contribTaxable').value) || 0;
+            
+            // Spouse contributions
+            const spouseContribSEP = parseFloat(document.getElementById('spouseContribSEP').value) || 0;
+            const spouseContribRoth = parseFloat(document.getElementById('spouseContribRoth').value) || 0;
+            const spouseContribHSA = parseFloat(document.getElementById('spouseContribHSA').value) || 0;
+            const spouseContribTaxable = parseFloat(document.getElementById('spouseContribTaxable').value) || 0;
+            
+            // Calculate growth for your accounts (to YOUR retirement)
+            let total401k = balance401k;
+            let totalRoth = balanceRoth;
+            let totalHSA = balanceHSA;
+            let totalTaxable = balanceTaxable;
+            
+            for (let year = 0; year < yearsToRetirement; year++) {
+                total401k = (total401k + contrib401k + employerMatch) * (1 + returnRate);
+                totalRoth = (totalRoth + contribRoth) * (1 + returnRate);
+                totalHSA = (totalHSA + contribHSA) * (1 + returnRate);
+                totalTaxable = (totalTaxable + contribTaxable) * (1 + returnRate);
+            }
+            
+            // Calculate growth for spouse accounts (to SPOUSE's retirement)
+            let totalSpouseTraditional = spouseRolloverIRA + spouseSEPIRA + spouseAnnuity;
+            let totalSpouseRoth = spouseRothIRA;
+            let totalSpouseHSA = spouseHSA;
+            let totalSpouseTaxable = spouseTaxable;
+            
+            for (let year = 0; year < spouseYearsToRetirement; year++) {
+                totalSpouseTraditional = (totalSpouseTraditional + spouseContribSEP) * (1 + returnRate);
+                totalSpouseRoth = (totalSpouseRoth + spouseContribRoth) * (1 + returnRate);
+                totalSpouseHSA = (totalSpouseHSA + spouseContribHSA) * (1 + returnRate);
+                totalSpouseTaxable = (totalSpouseTaxable + spouseContribTaxable) * (1 + returnRate);
+            }
+            
+            return {
+                // Your accounts at YOUR retirement
+                total401k,
+                totalRoth,
+                totalHSA,
+                totalTaxable,
+                // Spouse accounts at SPOUSE's retirement
+                totalSpouseTraditional,
+                totalSpouseRoth,
+                totalSpouseHSA,
+                totalSpouseTaxable,
+                // Metadata
+                yourRetirementAge: retirementAge,
+                spouseRetirementAge: spouseRetirementAge
+            };
+        }
+
+        function calculateGrowth() {
+            const currentAge = parseInt(document.getElementById('currentAge').value) || 35;
+            const retirementAge = parseInt(document.getElementById('retirementAge').value) || 65;
+            const spouseAge = parseInt(document.getElementById('spouseAge').value) || 29;
+            const spouseRetirementAge = parseInt(document.getElementById('spouseRetirementAge').value) || 65;
+            const returnRate = parseFloat(document.getElementById('returnRate').value) / 100 || 0.07;
+            
+            const yearsToRetirement = retirementAge - currentAge;
+            const spouseYearsToRetirement = spouseRetirementAge - spouseAge;
+
+            // Your balances and contributions
+            const balance401k = parseFloat(document.getElementById('balance401k').value) || 0;
+            const balanceRoth = parseFloat(document.getElementById('balanceRoth').value) || 0;
+            const balanceHSA = parseFloat(document.getElementById('balanceHSA').value) || 0;
+            const balanceTaxable = parseFloat(document.getElementById('balanceTaxable').value) || 0;
+            
+            const contrib401k = parseFloat(document.getElementById('contrib401k').value) || 0;
+            const employerMatch = parseFloat(document.getElementById('employerMatch').value) || 0;
+            const contribRoth = parseFloat(document.getElementById('contribRoth').value) || 0;
+            const contribHSA = parseFloat(document.getElementById('contribHSA').value) || 0;
+            const contribTaxable = parseFloat(document.getElementById('contribTaxable').value) || 0;
+
+            // Spouse balances and contributions
+            const spouseRolloverIRA = parseFloat(document.getElementById('spouseRolloverIRA').value) || 0;
+            const spouseSEPIRA = parseFloat(document.getElementById('spouseSEPIRA').value) || 0;
+            const spouseRothIRA = parseFloat(document.getElementById('spouseRothIRA').value) || 0;
+            const spouseHSA = parseFloat(document.getElementById('spouseHSA').value) || 0;
+            const spouseTaxable = parseFloat(document.getElementById('spouseTaxable').value) || 0;
+            const spouseAnnuity = parseFloat(document.getElementById('spouseAnnuity').value) || 0;
+            
+            const spouseContribSEP = parseFloat(document.getElementById('spouseContribSEP').value) || 0;
+            const spouseContribRoth = parseFloat(document.getElementById('spouseContribRoth').value) || 0;
+            const spouseContribHSA = parseFloat(document.getElementById('spouseContribHSA').value) || 0;
+            const spouseContribTaxable = parseFloat(document.getElementById('spouseContribTaxable').value) || 0;
+
+            const labels = [];
+            const totalBalanceData = [];
+            const contributionsData = [];
+            
+            let bal401k = balance401k;
+            let balRoth = balanceRoth;
+            let balHSA = balanceHSA;
+            let balTaxable = balanceTaxable;
+            
+            let spouseTraditional = spouseRolloverIRA + spouseSEPIRA + spouseAnnuity;
+            let spouseRoth = spouseRothIRA;
+            let spouseHSABal = spouseHSA;
+            let spouseTaxableBal = spouseTaxable;
+            
+            let totalContributions = balance401k + balanceRoth + balanceHSA + balanceTaxable + 
+                                     spouseRolloverIRA + spouseSEPIRA + spouseRothIRA + 
+                                     spouseHSA + spouseTaxable + spouseAnnuity;
+
+            // Calculate to the later retirement age
+            const maxYears = Math.max(yearsToRetirement, spouseYearsToRetirement);
+            
+            for (let year = 0; year <= maxYears; year++) {
+                const yourAge = currentAge + year;
+                const spouseCurrentAge = spouseAge + year;
+                labels.push(yourAge);
+                
+                let total = bal401k + balRoth + balHSA + balTaxable + 
+                           spouseTraditional + spouseRoth + spouseHSABal + spouseTaxableBal;
+                
+                totalBalanceData.push(total);
+                contributionsData.push(totalContributions);
+
+                // Grow your accounts (stop contributing after YOUR retirement)
+                if (year < yearsToRetirement) {
+                    bal401k = (bal401k + contrib401k + employerMatch) * (1 + returnRate);
+                    balRoth = (balRoth + contribRoth) * (1 + returnRate);
+                    balHSA = (balHSA + contribHSA) * (1 + returnRate);
+                    balTaxable = (balTaxable + contribTaxable) * (1 + returnRate);
+                    totalContributions += contrib401k + employerMatch + contribRoth + contribHSA + contribTaxable;
+                } else {
+                    // After your retirement, just grow with no contributions
+                    bal401k *= (1 + returnRate);
+                    balRoth *= (1 + returnRate);
+                    balHSA *= (1 + returnRate);
+                    balTaxable *= (1 + returnRate);
+                }
+                
+                // Grow spouse accounts (stop contributing after SPOUSE's retirement)
+                if (year < spouseYearsToRetirement) {
+                    spouseTraditional = (spouseTraditional + spouseContribSEP) * (1 + returnRate);
+                    spouseRoth = (spouseRoth + spouseContribRoth) * (1 + returnRate);
+                    spouseHSABal = (spouseHSABal + spouseContribHSA) * (1 + returnRate);
+                    spouseTaxableBal = (spouseTaxableBal + spouseContribTaxable) * (1 + returnRate);
+                    totalContributions += spouseContribSEP + spouseContribRoth + spouseContribHSA + spouseContribTaxable;
+                } else {
+                    // After spouse's retirement, just grow with no contributions
+                    spouseTraditional *= (1 + returnRate);
+                    spouseRoth *= (1 + returnRate);
+                    spouseHSABal *= (1 + returnRate);
+                    spouseTaxableBal *= (1 + returnRate);
+                }
+            }
+
+            const finalBalance = totalBalanceData[totalBalanceData.length - 1];
+            const totalGrowth = finalBalance - totalContributions;
+
+            document.getElementById('finalBalance').textContent = formatCurrency(finalBalance);
+            document.getElementById('totalContributions').textContent = formatCurrency(totalContributions);
+            document.getElementById('investmentGrowth').textContent = formatCurrency(totalGrowth);
+            document.getElementById('yearsToRetirement').textContent = yearsToRetirement;
+
+            updateGrowthChart(labels, totalBalanceData, contributionsData);
+        }
+
+        function updateGrowthChart(labels, balances, contributions) {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+
+            if (growthChart) {
+                growthChart.destroy();
+            }
+
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Total balance',
+                            data: balances,
+                            borderColor: '#635BFF',
+                            backgroundColor: 'rgba(99, 91, 255, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                        },
+                        {
+                            label: 'Total contributions',
+                            data: contributions,
+                            borderColor: '#6B7280',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            borderDash: [5, 5],
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#374151',
+                                font: { size: 12, family: "'Inter', sans-serif" },
+                                padding: 15,
+                                usePointStyle: true,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                            titleColor: '#F3F4F6',
+                            bodyColor: '#F3F4F6',
+                            borderColor: '#374151',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#E5E7EB', drawBorder: false },
+                            ticks: { color: '#6B7280', font: { size: 11 } },
+                            title: {
+                                display: true,
+                                text: 'Age',
+                                color: '#374151',
+                                font: { size: 12, weight: '600' }
+                            }
+                        },
+                        y: {
+                            grid: { color: '#E5E7EB', drawBorder: false },
+                            ticks: {
+                                color: '#6B7280',
+                                font: { size: 11 },
+                                callback: function(value) {
+                                    return '$' + (value / 1000).toFixed(0) + 'k';
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Balance',
+                                color: '#374151',
+                                font: { size: 12, weight: '600' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function calculateWithdrawalStrategy() {
+            const retirementAge = parseInt(document.getElementById('retirementAge').value) || 65;
+            const spouseRetirementAge = parseInt(document.getElementById('spouseRetirementAge').value) || 65;
+            const taxBracket = parseFloat(document.getElementById('taxBracket').value) / 100 || 0.22;
+            const capitalGainsRate = parseFloat(document.getElementById('capitalGainsRate').value) / 100 || 0.15;
+            const costBasis = parseFloat(document.getElementById('costBasis').value) / 100 || 0.70;
+            
+            const balances = getRetirementBalances();
+            const total = balances.total401k + balances.totalRoth + balances.totalHSA + balances.totalTaxable +
+                          balances.totalSpouseTraditional + balances.totalSpouseRoth + 
+                          balances.totalSpouseHSA + balances.totalSpouseTaxable;
+            const annualWithdrawal = total * 0.06;
+            
+            document.getElementById('totalRetirement').textContent = formatCurrency(total);
+            document.getElementById('annualWithdrawal').textContent = formatCurrency(annualWithdrawal);
+            
+            const strategy = calculateOptimalWithdrawals(balances, annualWithdrawal, retirementAge, taxBracket, capitalGainsRate, costBasis, spouseRetirementAge);
+            
+            displayWithdrawalTimeline(strategy.phases, retirementAge);
+            displayRMDInfo(balances.total401k, balances.totalSpouseTraditional, retirementAge, spouseRetirementAge);
+            displayTaxTips(taxBracket, capitalGainsRate);
+            
+            const firstYearTaxes = calculateFirstYearTaxes(strategy.phases[0], taxBracket, capitalGainsRate, costBasis);
+            document.getElementById('estimatedTaxes').textContent = formatCurrency(firstYearTaxes);
+            document.getElementById('netIncome').textContent = formatCurrency(annualWithdrawal - firstYearTaxes);
+            
+            createStrategyChart(balances, strategy, retirementAge);
+        }
+
+        function calculateOptimalWithdrawals(balances, annualWithdrawal, retirementAge, taxBracket, capitalGainsRate, costBasis, spouseRetirementAge) {
+            const phases = [];
+            
+            // Combine household taxable and traditional accounts
+            const totalTaxable = balances.totalTaxable + balances.totalSpouseTaxable;
+            const totalTraditional = balances.total401k + balances.totalSpouseTraditional;
+            const totalRoth = balances.totalRoth + balances.totalSpouseRoth;
+            const totalHSA = balances.totalHSA + balances.totalSpouseHSA;
+            
+            if (retirementAge < 73) {
+                phases.push({
+                    ageRange: `${retirementAge}-72`,
+                    account: 'Taxable accounts (both)',
+                    priority: 1,
+                    rationale: 'Lowest tax impact with step-up basis at death. Harvest gains at favorable rates.',
+                    taxRate: capitalGainsRate * (1 - costBasis),
+                    amount: Math.min(totalTaxable, annualWithdrawal * (73 - retirementAge))
+                });
+                
+                phases.push({
+                    ageRange: `${retirementAge}-72`,
+                    account: 'Traditional accounts (401k, IRAs, SEP, Annuity)',
+                    priority: 2,
+                    rationale: 'Fill lower tax brackets before RMDs force distributions at 73.',
+                    taxRate: taxBracket,
+                    amount: Math.min(totalTraditional * 0.3, annualWithdrawal * (73 - retirementAge) * 0.4)
+                });
+
+                phases.push({
+                    ageRange: `${retirementAge}-72`,
+                    account: 'HSA accounts (medical expenses)',
+                    priority: 3,
+                    rationale: 'Tax-free for qualified medical expenses. Save receipts for future reimbursement.',
+                    taxRate: 0,
+                    amount: totalHSA * 0.4
+                });
+            }
+            
+            phases.push({
+                ageRange: '73+',
+                account: 'Traditional account RMDs',
+                priority: 1,
+                rationale: 'Required by law starting at 73. Both spouses must take RMDs from their accounts. 25% penalty if missed.',
+                taxRate: taxBracket,
+                rmd: true,
+                amount: 0
+            });
+            
+            phases.push({
+                ageRange: '73+',
+                account: 'HSA accounts (any purpose)',
+                priority: 2,
+                rationale: 'After 65, withdraw for any purpose. Taxed as ordinary income, no penalties.',
+                taxRate: taxBracket,
+                amount: totalHSA * 0.6
+            });
+            
+            phases.push({
+                ageRange: '73+',
+                account: 'Taxable accounts (both)',
+                priority: 3,
+                rationale: 'Supplement if needed. Maintain flexibility for large expenses.',
+                taxRate: capitalGainsRate * (1 - costBasis),
+                amount: totalTaxable * 0.7
+            });
+            
+            phases.push({
+                ageRange: `${retirementAge}+`,
+                account: 'Roth accounts (both)',
+                priority: 4,
+                rationale: 'Preserve tax-free growth as long as possible. No RMDs. Excellent for estate planning.',
+                taxRate: 0,
+                amount: totalRoth
+            });
+            
+            return { phases, totalNeeded: annualWithdrawal };
+        }
+
+        function calculateFirstYearTaxes(firstPhase, taxBracket, capitalGainsRate, costBasis) {
+            if (firstPhase.account === 'Taxable brokerage') {
+                const withdrawal = firstPhase.amount / 8;
+                const gains = withdrawal * (1 - costBasis);
+                return gains * capitalGainsRate;
+            } else if (firstPhase.account === 'Traditional 401(k)') {
+                const withdrawal = firstPhase.amount / 8;
+                return withdrawal * taxBracket;
+            }
+            return 0;
+        }
+
+        function displayWithdrawalTimeline(phases, retirementAge) {
+            const timeline = document.getElementById('withdrawalTimeline');
+            timeline.innerHTML = '';
+            
+            phases.forEach((phase) => {
+                const taxEfficiency = (1 - phase.taxRate) * 100;
+                
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="timeline-age">Age ${phase.ageRange}</div>
+                    <div class="timeline-account">${phase.account}</div>
+                    <div class="timeline-description">${phase.rationale}</div>
+                    <div class="timeline-stats">
+                        <span><span class="timeline-stat-label">Tax rate:</span> <span class="timeline-stat-value">${(phase.taxRate * 100).toFixed(1)}%</span></span>
+                        <span><span class="timeline-stat-label">Efficiency:</span> <span class="timeline-stat-value">${taxEfficiency.toFixed(1)}%</span></span>
+                        <span><span class="timeline-stat-label">Priority:</span> <span class="timeline-stat-value">#${phase.priority}</span></span>
+                    </div>
+                `;
+                timeline.appendChild(item);
+            });
+        }
+
+        function displayRMDInfo(yourTraditional, spouseTraditional, retirementAge, spouseRetirementAge) {
+            const rmdDiv = document.getElementById('rmdInfo');
+            
+            const yourRMDAge = Math.max(retirementAge, 73);
+            const spouseRMDAge = Math.max(spouseRetirementAge, 73);
+            
+            let html = '';
+            
+            // Your RMD
+            if (retirementAge >= 73) {
+                const divisor = rmdDivisors[retirementAge] || 26.5;
+                const rmdAmount = yourTraditional / divisor;
+                
+                html += `
+                    <div class="metric-item">
+                        <div class="metric-item-label">Your RMD at age ${retirementAge}</div>
+                        <div class="metric-item-value">${formatCurrency(rmdAmount)}</div>
+                        <div class="metric-item-change">
+                            ${((rmdAmount / yourTraditional) * 100).toFixed(2)}% of your traditional accounts
+                        </div>
+                    </div>
+                `;
+            } else {
+                const yearsUntilRMD = 73 - retirementAge;
+                html += `
+                    <div class="metric-item">
+                        <div class="metric-item-label">Your RMDs begin at age 73</div>
+                        <div class="metric-item-value">${yearsUntilRMD} years away</div>
+                        <div class="metric-item-change">
+                            Time to strategically withdraw before RMDs force distributions
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Spouse RMD
+            if (spouseRetirementAge >= 73) {
+                const divisor = rmdDivisors[spouseRetirementAge] || 26.5;
+                const rmdAmount = spouseTraditional / divisor;
+                
+                html += `
+                    <div class="metric-item" style="margin-top: 12px;">
+                        <div class="metric-item-label">Spouse's RMD at age ${spouseRetirementAge}</div>
+                        <div class="metric-item-value">${formatCurrency(rmdAmount)}</div>
+                        <div class="metric-item-change">
+                            ${((rmdAmount / spouseTraditional) * 100).toFixed(2)}% of spouse's traditional accounts (Rollover IRA + SEP-IRA + Annuity)
+                        </div>
+                    </div>
+                `;
+            } else {
+                const yearsUntilRMD = 73 - spouseRetirementAge;
+                html += `
+                    <div class="metric-item" style="margin-top: 12px;">
+                        <div class="metric-item-label">Spouse's RMDs begin at age 73</div>
+                        <div class="metric-item-value">${yearsUntilRMD} years away</div>
+                        <div class="metric-item-change">
+                            Spouse has time before RMDs from Rollover IRA, SEP-IRA, and Annuity
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += `
+                <p style="margin-top: 16px; font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                    <strong>Important:</strong> Each person must take RMDs from their own traditional accounts. 
+                    First RMD must be taken by April 1st of the year after turning 73. 
+                    All subsequent RMDs by December 31st. Missing an RMD results in a 25% penalty.
+                </p>
+            `;
+            
+            rmdDiv.innerHTML = html;
+        }
+
+        function displayTaxTips(taxBracket, capitalGainsRate) {
+            const tips = [
+                `<strong>HSA triple advantage:</strong> Contributions are tax-deductible, growth is tax-free, and withdrawals for medical expenses are tax-free. After 65, it functions like a Traditional IRA.`,
+                `<strong>Strategic HSA usage:</strong> Pay medical expenses out-of-pocket and keep receipts. Let your HSA grow tax-free and reimburse yourself decades later with no time limit.`,
+                `<strong>Roth conversions:</strong> Before age 73, convert 401(k) funds to Roth IRA during low-income years to fill the ${(taxBracket * 100).toFixed(0)}% bracket.`,
+                `<strong>Tax-loss harvesting:</strong> Sell losing positions to offset capital gains. Harvest up to $3,000 in losses annually to offset ordinary income.`,
+                `<strong>Qualified dividends:</strong> Hold dividend stocks in taxable accounts. Qualified dividends are taxed at ${(capitalGainsRate * 100).toFixed(0)}% vs ${(taxBracket * 100).toFixed(0)}% for 401(k) withdrawals.`,
+                `<strong>Charitable giving:</strong> After 70½, use QCDs from your 401(k) to satisfy RMDs. Up to $100,000 annually goes tax-free to charity.`,
+                `<strong>Asset location:</strong> Keep bonds and REITs in tax-deferred accounts. Keep growth stocks in taxable accounts for step-up basis benefits.`
+            ];
+            
+            document.getElementById('taxTips').innerHTML = tips.map(tip => `<div class="tip-item">${tip}</div>`).join('');
+        }
+
+        function createStrategyChart(balances, strategy, retirementAge) {
+            const ctx = document.getElementById('strategyChart').getContext('2d');
+            
+            if (strategyChart) {
+                strategyChart.destroy();
+            }
+            
+            const labels = ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'];
+            const annualWithdrawal = (balances.total401k + balances.totalRoth + balances.totalHSA + balances.totalTaxable +
+                                      balances.totalSpouseTraditional + balances.totalSpouseRoth + 
+                                      balances.totalSpouseHSA + balances.totalSpouseTaxable) * 0.06;
+            const returnRate = 0.07;
+            
+            // Combine household accounts
+            let balTraditional = balances.total401k + balances.totalSpouseTraditional;
+            let balRoth = balances.totalRoth + balances.totalSpouseRoth;
+            let balHSA = balances.totalHSA + balances.totalSpouseHSA;
+            let balTaxable = balances.totalTaxable + balances.totalSpouseTaxable;
+            
+            const withdrawalsTraditional = [];
+            const withdrawalsRoth = [];
+            const withdrawalsHSA = [];
+            const withdrawalsTaxable = [];
+            
+            for (let year = 1; year <= 5; year++) {
+                const currentAge = retirementAge + year - 1;
+                
+                let withdrawalTraditional = 0;
+                let withdrawalRoth = 0;
+                let withdrawalHSA = 0;
+                let withdrawalTaxable = 0;
+                
+                if (currentAge < 73) {
+                    withdrawalTaxable = Math.min(balTaxable, annualWithdrawal * 0.5);
+                    balTaxable -= withdrawalTaxable;
+                    
+                    let remaining = annualWithdrawal - withdrawalTaxable;
+                    
+                    if (remaining > 0) {
+                        withdrawalTraditional = Math.min(balTraditional, remaining * 0.6);
+                        balTraditional -= withdrawalTraditional;
+                        remaining -= withdrawalTraditional;
+                    }
+                    
+                    if (remaining > 0) {
+                        withdrawalHSA = Math.min(balHSA, remaining);
+                        balHSA -= withdrawalHSA;
+                        remaining -= withdrawalHSA;
+                    }
+                    
+                    if (remaining > 0) {
+                        withdrawalRoth = Math.min(balRoth, remaining);
+                        balRoth -= withdrawalRoth;
+                    }
+                } else {
+                    const divisor = rmdDivisors[currentAge] || 26.5;
+                    withdrawalTraditional = balTraditional / divisor;
+                    balTraditional -= withdrawalTraditional;
+                    
+                    let remaining = Math.max(0, annualWithdrawal - withdrawalTraditional);
+                    
+                    if (remaining > 0) {
+                        withdrawalHSA = Math.min(balHSA, remaining * 0.4);
+                        balHSA -= withdrawalHSA;
+                        remaining -= withdrawalHSA;
+                    }
+                    
+                    if (remaining > 0) {
+                        withdrawalTaxable = Math.min(balTaxable, remaining);
+                        balTaxable -= withdrawalTaxable;
+                        remaining -= withdrawalTaxable;
+                    }
+                    
+                    if (remaining > 0) {
+                        withdrawalRoth = Math.min(balRoth, remaining);
+                        balRoth -= withdrawalRoth;
+                    }
+                }
+                
+                balTraditional *= (1 + returnRate);
+                balRoth *= (1 + returnRate);
+                balHSA *= (1 + returnRate);
+                balTaxable *= (1 + returnRate);
+                
+                withdrawalsTraditional.push(withdrawalTraditional);
+                withdrawalsRoth.push(withdrawalRoth);
+                withdrawalsHSA.push(withdrawalHSA);
+                withdrawalsTaxable.push(withdrawalTaxable);
+            }
+            
+            strategyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Taxable accounts',
+                            data: withdrawalsTaxable,
+                            backgroundColor: '#6B7280',
+                            borderRadius: 6,
+                        },
+                        {
+                            label: 'Traditional accounts',
+                            data: withdrawalsTraditional,
+                            backgroundColor: '#635BFF',
+                            borderRadius: 6,
+                        },
+                        {
+                            label: 'HSA accounts',
+                            data: withdrawalsHSA,
+                            backgroundColor: '#8B5CF6',
+                            borderRadius: 6,
+                        },
+                        {
+                            label: 'Roth accounts',
+                            data: withdrawalsRoth,
+                            backgroundColor: '#10B981',
+                            borderRadius: 6,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#374151',
+                                font: { size: 11, family: "'Inter', sans-serif" },
+                                padding: 10,
+                                usePointStyle: true,
+                                boxWidth: 12,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                            titleColor: '#F3F4F6',
+                            bodyColor: '#F3F4F6',
+                            padding: 12,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    if (value === 0) return null;
+                                    return context.dataset.label + ': ' + formatCurrency(value);
+                                },
+                                footer: function(tooltipItems) {
+                                    let total = 0;
+                                    tooltipItems.forEach(item => {
+                                        total += item.parsed.y;
+                                    });
+                                    return 'Total: ' + formatCurrency(total);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            grid: { display: false, drawBorder: false },
+                            ticks: { color: '#6B7280', font: { size: 11 } }
+                        },
+                        y: {
+                            stacked: true,
+                            grid: { color: '#E5E7EB', drawBorder: false },
+                            ticks: {
+                                color: '#6B7280',
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return '$' + (value / 1000).toFixed(0) + 'k';
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Annual Withdrawal Amount',
+                                color: '#374151',
+                                font: { size: 11, weight: '600' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function selectScenario(scenario) {
+            currentScenario = scenario;
+            
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById('scenario' + scenario.charAt(0).toUpperCase() + scenario.slice(1)).classList.add('active');
+            
+            calculateDrawdown();
+        }
+
+        function calculateDrawdown() {
+            const retirementAge = parseInt(document.getElementById('retirementAge').value) || 65;
+            const balances = getRetirementBalances();
+            const startingBalance = balances.total401k + balances.totalRoth + balances.totalHSA + balances.totalTaxable +
+                                    balances.totalSpouseTraditional + balances.totalSpouseRoth + 
+                                    balances.totalSpouseHSA + balances.totalSpouseTaxable;
+            const withdrawalRate = 0.06;
+            const scenario = marketScenarios[currentScenario];
+            
+            const labels = [];
+            const balanceData = [];
+            let balance = startingBalance;
+            let totalWithdrawals = 0;
+            
+            labels.push('Start');
+            balanceData.push(balance);
+            
+            for (let year = 0; year < 5; year++) {
+                const withdrawal = balance * withdrawalRate;
+                totalWithdrawals += withdrawal;
+                balance -= withdrawal;
+                
+                const marketReturn = scenario.returns[year] / 100;
+                balance *= (1 + marketReturn);
+                
+                labels.push(`Year ${year + 1}`);
+                balanceData.push(balance);
+            }
+            
+            const finalBalance = balanceData[balanceData.length - 1];
+            const balanceChange = ((finalBalance - startingBalance) / startingBalance * 100);
+            const netChange = finalBalance - startingBalance;
+            
+            document.getElementById('finalRetirementBalance').textContent = formatCurrency(finalBalance);
+            document.getElementById('balanceChange').textContent = 
+                `${balanceChange >= 0 ? '+' : ''}${balanceChange.toFixed(1)}% from start`;
+            document.getElementById('totalWithdrawn').textContent = formatCurrency(totalWithdrawals);
+            document.getElementById('netChange').textContent = 
+                `${netChange >= 0 ? '+' : ''}${formatCurrency(Math.abs(netChange))}`;
+            document.getElementById('netChangeDescription').textContent = 
+                netChange >= 0 ? 'Portfolio grew despite withdrawals' : 'Net portfolio decline';
+            
+            const warningBox = document.getElementById('warningBox');
+            if (balanceChange < -15) {
+                warningBox.style.display = 'block';
+                document.getElementById('warningContent').innerHTML = 
+                    `Your household portfolio declined by ${Math.abs(balanceChange).toFixed(1)}% in the first 5 years. ` +
+                    `This sequence risk significantly impacts sustainability. ` +
+                    `Consider reducing withdrawal rate to 4-5% or building a larger cash reserve.`;
+            } else if (balanceChange < 0) {
+                warningBox.style.display = 'block';
+                document.getElementById('warningContent').innerHTML = 
+                    `Your household portfolio experienced a ${Math.abs(balanceChange).toFixed(1)}% decline. ` +
+                    `While manageable, monitor your withdrawal rate and consider having 2-3 years of expenses in cash.`;
+            } else {
+                warningBox.style.display = 'none';
+            }
+            
+            updateDrawdownChart(labels, balanceData, startingBalance);
+        }
+
+        function updateDrawdownChart(labels, balances, startingBalance) {
+            const ctx = document.getElementById('drawdownChart').getContext('2d');
+            
+            if (drawdownChart) {
+                drawdownChart.destroy();
+            }
+            
+            const baseline = labels.map(() => startingBalance);
+            
+            drawdownChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Portfolio balance',
+                            data: balances,
+                            borderColor: '#635BFF',
+                            backgroundColor: 'rgba(99, 91, 255, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 5,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: '#635BFF',
+                            pointBorderColor: '#FFFFFF',
+                            pointBorderWidth: 2,
+                        },
+                        {
+                            label: 'Starting balance',
+                            data: baseline,
+                            borderColor: '#6B7280',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0,
+                            borderDash: [8, 4],
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#374151',
+                                font: { size: 11, family: "'Inter', sans-serif" },
+                                padding: 10,
+                                usePointStyle: true,
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                            titleColor: '#F3F4F6',
+                            bodyColor: '#F3F4F6',
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                },
+                                afterBody: function(context) {
+                                    if (context[0].datasetIndex === 0 && context[0].dataIndex > 0) {
+                                        const yearIndex = context[0].dataIndex - 1;
+                                        const scenario = marketScenarios[currentScenario];
+                                        return `Market return: ${scenario.returns[yearIndex] >= 0 ? '+' : ''}${scenario.returns[yearIndex]}%`;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#E5E7EB', drawBorder: false },
+                            ticks: { color: '#6B7280', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: '#E5E7EB', drawBorder: false },
+                            ticks: {
+                                color: '#6B7280',
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return '$' + (value / 1000).toFixed(0) + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function getAIInsights() {
+            const insightsPanel = document.getElementById('aiInsights');
+            const contentDiv = document.getElementById('aiContent');
+            
+            insightsPanel.style.display = 'block';
+            contentDiv.innerHTML = '<span class="loading">Analyzing your strategy</span>';
+
+            const currentAge = parseInt(document.getElementById('currentAge').value) || 35;
+            const retirementAge = parseInt(document.getElementById('retirementAge').value) || 65;
+            const returnRate = parseFloat(document.getElementById('returnRate').value) || 7;
+            const taxBracket = parseFloat(document.getElementById('taxBracket').value) || 22;
+
+            const balances = getRetirementBalances();
+            const totalBalance = balances.total401k + balances.totalRoth + balances.totalHSA + balances.totalTaxable;
+            
+            const contrib401k = parseFloat(document.getElementById('contrib401k').value) || 0;
+            const employerMatch = parseFloat(document.getElementById('employerMatch').value) || 0;
+            const contribRoth = parseFloat(document.getElementById('contribRoth').value) || 0;
+            const contribHSA = parseFloat(document.getElementById('contribHSA').value) || 0;
+            const contribTaxable = parseFloat(document.getElementById('contribTaxable').value) || 0;
+            const totalAnnualContrib = contrib401k + employerMatch + contribRoth + contribHSA + contribTaxable;
+
+            const prompt = `I'm planning for retirement:
+- Age: ${currentAge}, Retirement: ${retirementAge}
+- Current: 401k $${(parseFloat(document.getElementById('balance401k').value) || 0).toLocaleString()}, Roth $${(parseFloat(document.getElementById('balanceRoth').value) || 0).toLocaleString()}, HSA $${(parseFloat(document.getElementById('balanceHSA').value) || 0).toLocaleString()}, Taxable $${(parseFloat(document.getElementById('balanceTaxable').value) || 0).toLocaleString()}
+- Annual contributions: $${totalAnnualContrib.toLocaleString()}
+- Expected return: ${returnRate}%, Tax bracket: ${taxBracket}%
+- Projected at retirement: $${totalBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}
+
+Provide 3-4 concise insights about my strategy focusing on: tax diversification (especially HSA), contribution optimization, one tax recommendation, and key risks. Keep under 150 words, practical and encouraging.`;
+
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 1000,
+                        messages: [{ role: 'user', content: prompt }]
+                    })
+                });
+
+                const data = await response.json();
+                const aiResponse = data.content.find(item => item.type === 'text')?.text || 'Unable to generate insights.';
+                contentDiv.innerHTML = aiResponse;
+            } catch (error) {
+                contentDiv.innerHTML = 'Unable to connect to AI service. Please try again.';
+            }
+        }
+
+        function calculateAll() {
+            calculateGrowth();
+            calculateWithdrawalStrategy();
+            calculateDrawdown();
+        }
+
+        // Initialize on load
+        calculateAll();
+    </script>
+</body>
+</html>
