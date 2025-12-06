@@ -152,6 +152,10 @@
             font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.15s;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-primary {
@@ -556,6 +560,118 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.2s;
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 10% auto;
+            padding: 32px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 24px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+            min-height: 48px;
+        }
+
+        /* Account item styles */
+        .account-item {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+
+        .account-item:hover {
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .account-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .account-item-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .account-item-remove {
+            background: transparent;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            padding: 4px 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .account-item-remove:hover {
+            background: var(--red);
+            color: #FFFFFF;
+            border-radius: 4px;
+        }
+
+        .account-item-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .account-item-inputs .input-group {
+            margin-bottom: 0;
+        }
+
+        .account-item-inputs input {
+            font-size: 0.875rem;
+            padding: 8px 10px;
+        }
+
+        .account-item-inputs label {
+            font-size: 0.8125rem;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -593,127 +709,14 @@
                 <div class="divider"></div>
 
                 <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">Your accounts</h3>
-
-                <div class="input-group">
-                    <label>Traditional 401(k) balance</label>
-                    <input type="number" id="balance401k" value="250000" min="0" step="1000">
-                    <div class="hint">Tax-deferred, subject to RMDs at 73</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Roth IRA balance</label>
-                    <input type="number" id="balanceRoth" value="100000" min="0" step="1000">
-                    <div class="hint">Tax-free withdrawals, no RMDs</div>
-                </div>
-
-                <div class="input-group">
-                    <label>HSA balance</label>
-                    <input type="number" id="balanceHSA" value="50000" min="0" step="1000">
-                    <div class="hint">Triple tax advantage</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Taxable brokerage balance</label>
-                    <input type="number" id="balanceTaxable" value="150000" min="0" step="1000">
-                    <div class="hint">Capital gains tax, flexible access</div>
-                </div>
+                <div id="selfAccountsList"></div>
+                <button class="btn btn-secondary" onclick="showAddAccountModal('self')" style="margin-bottom: 20px;">+ Add your account</button>
 
                 <div class="divider"></div>
 
                 <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">Spouse's accounts</h3>
-
-                <div class="input-group">
-                    <label>Rollover IRA balance</label>
-                    <input type="number" id="spouseRolloverIRA" value="150000" min="0" step="1000">
-                    <div class="hint">Tax-deferred, subject to RMDs at 73</div>
-                </div>
-
-                <div class="input-group">
-                    <label>SEP-IRA balance</label>
-                    <input type="number" id="spouseSEPIRA" value="80000" min="0" step="1000">
-                    <div class="hint">Self-employed retirement, RMDs at 73</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Roth IRA balance</label>
-                    <input type="number" id="spouseRothIRA" value="75000" min="0" step="1000">
-                    <div class="hint">Tax-free withdrawals, no RMDs</div>
-                </div>
-
-                <div class="input-group">
-                    <label>HSA balance</label>
-                    <input type="number" id="spouseHSA" value="40000" min="0" step="1000">
-                    <div class="hint">Triple tax advantage</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Taxable brokerage balance</label>
-                    <input type="number" id="spouseTaxable" value="100000" min="0" step="1000">
-                    <div class="hint">Capital gains tax, flexible access</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Fidelity annuity balance</label>
-                    <input type="number" id="spouseAnnuity" value="50000" min="0" step="1000">
-                    <div class="hint">Tax-deferred, penalty before 59½</div>
-                </div>
-
-                <div class="divider"></div>
-
-                <h3 style="font-size: 0.875rem; font-weight: 600; color: var(--gray-700); margin-bottom: 16px;">Annual contributions</h3>
-
-                <div class="input-group">
-                    <label>Annual 401(k) contribution</label>
-                    <input type="number" id="contrib401k" value="10000" min="0" step="500">
-                    <div class="hint">2024 limit: $23,000 ($30,500 if 50+)</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Employer match</label>
-                    <input type="number" id="employerMatch" value="5000" min="0" step="500">
-                </div>
-
-                <div class="input-group">
-                    <label>Annual Roth IRA contribution</label>
-                    <input type="number" id="contribRoth" value="7000" min="0" step="500">
-                    <div class="hint">2024 limit: $7,000 ($8,000 if 50+)</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Annual HSA contribution</label>
-                    <input type="number" id="contribHSA" value="4150" min="0" step="100">
-                    <div class="hint">2024 limit: $4,150 individual, $8,300 family</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Annual taxable contribution</label>
-                    <input type="number" id="contribTaxable" value="5000" min="0" step="500">
-                </div>
-
-                <div style="margin-top: 16px; margin-bottom: 8px;">
-                    <h4 style="font-size: 0.8125rem; font-weight: 600; color: var(--gray-600);">Spouse contributions</h4>
-                </div>
-
-                <div class="input-group">
-                    <label>Annual SEP-IRA contribution</label>
-                    <input type="number" id="spouseContribSEP" value="8000" min="0" step="500">
-                    <div class="hint">2024 limit: 25% of compensation, max $69,000</div>
-                </div>
-
-                <div class="input-group">
-                    <label>Annual Roth IRA contribution</label>
-                    <input type="number" id="spouseContribRoth" value="7000" min="0" step="500">
-                </div>
-
-                <div class="input-group">
-                    <label>Annual HSA contribution</label>
-                    <input type="number" id="spouseContribHSA" value="4150" min="0" step="100">
-                </div>
-
-                <div class="input-group">
-                    <label>Annual taxable contribution</label>
-                    <input type="number" id="spouseContribTaxable" value="3000" min="0" step="500">
-                </div>
+                <div id="spouseAccountsList"></div>
+                <button class="btn btn-secondary" onclick="showAddAccountModal('spouse')" style="margin-bottom: 20px;">+ Add spouse's account</button>
 
                 <div class="divider"></div>
 
@@ -913,11 +916,66 @@
         </div>
     </div>
 
+    <!-- Add Account Modal -->
+    <div id="addAccountModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add Account</div>
+            <div class="input-group">
+                <label>Account type</label>
+                <select id="modalAccountType" onchange="updateEmployerMatchVisibility()" style="width: 100%; padding: 10px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 0.9375rem; font-family: 'Inter', sans-serif; color: var(--gray-900);">
+                    <option value="401k">401k</option>
+                    <option value="Traditional IRA">Traditional IRA</option>
+                    <option value="SEP-IRA">SEP-IRA</option>
+                    <option value="Rollover IRA">Rollover IRA</option>
+                    <option value="Annuity">Annuity</option>
+                    <option value="Roth IRA">Roth IRA</option>
+                    <option value="Roth 401k">Roth 401k</option>
+                    <option value="HSA">HSA</option>
+                    <option value="Taxable Brokerage">Taxable Brokerage</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Current balance</label>
+                <input type="number" id="modalBalance" value="0" min="0" step="1000">
+            </div>
+            <div class="input-group">
+                <label>Annual contribution (optional)</label>
+                <input type="number" id="modalContribution" value="0" min="0" step="500">
+            </div>
+            <div class="input-group" id="employerMatchGroup" style="display: none;">
+                <label>Employer match (optional)</label>
+                <input type="number" id="modalEmployerMatch" value="0" min="0" step="500">
+                <div class="hint">Annual employer matching contribution</div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="handleAddAccount()">Add Account</button>
+                <button class="btn" onclick="hideAddAccountModal()" style="background: var(--gray-200); color: var(--gray-700);">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let growthChart = null;
         let strategyChart = null;
         let drawdownChart = null;
         let currentScenario = 'below';
+
+        // Account type definitions
+        const accountTypes = {
+            '401k': { category: 'traditional', label: '401k', hasRMD: true, rmdAge: 73 },
+            'Traditional IRA': { category: 'traditional', label: 'Traditional IRA', hasRMD: true, rmdAge: 73 },
+            'SEP-IRA': { category: 'traditional', label: 'SEP-IRA', hasRMD: true, rmdAge: 73 },
+            'Rollover IRA': { category: 'traditional', label: 'Rollover IRA', hasRMD: true, rmdAge: 73 },
+            'Annuity': { category: 'traditional', label: 'Annuity', hasRMD: true, rmdAge: 73 },
+            'Roth IRA': { category: 'roth', label: 'Roth IRA', hasRMD: false },
+            'Roth 401k': { category: 'roth', label: 'Roth 401k', hasRMD: false },
+            'HSA': { category: 'hsa', label: 'HSA', hasRMD: false },
+            'Taxable Brokerage': { category: 'taxable', label: 'Taxable Brokerage', hasRMD: false }
+        };
+
+        // Global accounts array
+        let accounts = [];
+        let nextAccountId = 1;
 
         const marketScenarios = {
             below: {
@@ -948,69 +1006,217 @@
             }).format(value);
         }
 
+        // Account management functions
+        function addAccount(owner, type, balance, annualContribution, employerMatch) {
+            const account = {
+                id: nextAccountId++,
+                owner: owner, // 'self' or 'spouse'
+                type: type,
+                balance: balance || 0,
+                annualContribution: annualContribution || 0,
+                employerMatch: employerMatch || 0
+            };
+            accounts.push(account);
+            saveAccounts();
+            return account;
+        }
+
+        function removeAccount(id) {
+            accounts = accounts.filter(acc => acc.id !== id);
+            saveAccounts();
+        }
+
+        function getAccountDisplayName(account) {
+            const typeInfo = accountTypes[account.type];
+            const sameTypeAccounts = accounts.filter(acc =>
+                acc.owner === account.owner && acc.type === account.type
+            );
+
+            if (sameTypeAccounts.length > 1) {
+                const index = sameTypeAccounts.findIndex(acc => acc.id === account.id);
+                return `${typeInfo.label} #${index + 1}`;
+            }
+            return typeInfo.label;
+        }
+
+        function saveAccounts() {
+            localStorage.setItem('retirementAccounts', JSON.stringify(accounts));
+            localStorage.setItem('nextAccountId', nextAccountId.toString());
+        }
+
+        function loadAccounts() {
+            const saved = localStorage.getItem('retirementAccounts');
+            if (saved) {
+                accounts = JSON.parse(saved);
+                nextAccountId = parseInt(localStorage.getItem('nextAccountId')) || 1;
+            }
+        }
+
+        // Modal functions
+        let currentModalOwner = null;
+
+        function showAddAccountModal(owner) {
+            currentModalOwner = owner;
+            document.getElementById('addAccountModal').style.display = 'block';
+            document.getElementById('modalBalance').value = '0';
+            document.getElementById('modalContribution').value = '0';
+            document.getElementById('modalEmployerMatch').value = '0';
+            updateEmployerMatchVisibility();
+        }
+
+        function hideAddAccountModal() {
+            document.getElementById('addAccountModal').style.display = 'none';
+            currentModalOwner = null;
+        }
+
+        function updateEmployerMatchVisibility() {
+            const type = document.getElementById('modalAccountType').value;
+            const employerMatchGroup = document.getElementById('employerMatchGroup');
+            if (type === '401k' || type === 'Roth 401k') {
+                employerMatchGroup.style.display = 'block';
+            } else {
+                employerMatchGroup.style.display = 'none';
+            }
+        }
+
+        function handleAddAccount() {
+            const type = document.getElementById('modalAccountType').value;
+            const balance = parseFloat(document.getElementById('modalBalance').value) || 0;
+            const contribution = parseFloat(document.getElementById('modalContribution').value) || 0;
+            const employerMatch = parseFloat(document.getElementById('modalEmployerMatch').value) || 0;
+
+            addAccount(currentModalOwner, type, balance, contribution, employerMatch);
+            renderAccounts();
+            hideAddAccountModal();
+            calculateAll();
+        }
+
+        function handleRemoveAccount(id) {
+            if (confirm('Are you sure you want to remove this account?')) {
+                removeAccount(id);
+                renderAccounts();
+                calculateAll();
+            }
+        }
+
+        function handleAccountChange(id, field, value) {
+            const account = accounts.find(acc => acc.id === id);
+            if (account) {
+                account[field] = parseFloat(value) || 0;
+                saveAccounts();
+                calculateAll();
+            }
+        }
+
+        // Render account lists
+        function renderAccounts() {
+            const selfAccounts = accounts.filter(acc => acc.owner === 'self');
+            const spouseAccounts = accounts.filter(acc => acc.owner === 'spouse');
+
+            renderAccountList('selfAccountsList', selfAccounts);
+            renderAccountList('spouseAccountsList', spouseAccounts);
+        }
+
+        function renderAccountList(containerId, accountList) {
+            const container = document.getElementById(containerId);
+
+            if (accountList.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray-500); font-size: 0.875rem; margin-bottom: 12px;">No accounts added yet</p>';
+                return;
+            }
+
+            container.innerHTML = accountList.map(account => {
+                const displayName = getAccountDisplayName(account);
+                const is401k = account.type === '401k' || account.type === 'Roth 401k';
+                const employerMatchField = is401k ? `
+                    <div class="input-group">
+                        <label>Employer match</label>
+                        <input type="number" value="${account.employerMatch || 0}" min="0" step="500"
+                            onchange="handleAccountChange(${account.id}, 'employerMatch', this.value)">
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="account-item">
+                        <div class="account-item-header">
+                            <div class="account-item-title">${displayName}</div>
+                            <button class="account-item-remove" onclick="handleRemoveAccount(${account.id})">Remove</button>
+                        </div>
+                        <div class="account-item-inputs" style="grid-template-columns: ${is401k ? '1fr 1fr 1fr' : '1fr 1fr'};">
+                            <div class="input-group">
+                                <label>Current balance</label>
+                                <input type="number" value="${account.balance}" min="0" step="1000"
+                                    onchange="handleAccountChange(${account.id}, 'balance', this.value)">
+                            </div>
+                            <div class="input-group">
+                                <label>Annual contribution</label>
+                                <input type="number" value="${account.annualContribution}" min="0" step="500"
+                                    onchange="handleAccountChange(${account.id}, 'annualContribution', this.value)">
+                            </div>
+                            ${employerMatchField}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         function getRetirementBalances() {
             const currentAge = parseInt(document.getElementById('currentAge').value) || 35;
             const retirementAge = parseInt(document.getElementById('retirementAge').value) || 65;
             const spouseAge = parseInt(document.getElementById('spouseAge').value) || 29;
             const spouseRetirementAge = parseInt(document.getElementById('spouseRetirementAge').value) || 65;
-            
+
             const yearsToRetirement = retirementAge - currentAge;
             const spouseYearsToRetirement = spouseRetirementAge - spouseAge;
             const returnRate = parseFloat(document.getElementById('returnRate').value) / 100 || 0.07;
-            
-            // Your accounts
-            const balance401k = parseFloat(document.getElementById('balance401k').value) || 0;
-            const balanceRoth = parseFloat(document.getElementById('balanceRoth').value) || 0;
-            const balanceHSA = parseFloat(document.getElementById('balanceHSA').value) || 0;
-            const balanceTaxable = parseFloat(document.getElementById('balanceTaxable').value) || 0;
-            
-            // Spouse accounts
-            const spouseRolloverIRA = parseFloat(document.getElementById('spouseRolloverIRA').value) || 0;
-            const spouseSEPIRA = parseFloat(document.getElementById('spouseSEPIRA').value) || 0;
-            const spouseRothIRA = parseFloat(document.getElementById('spouseRothIRA').value) || 0;
-            const spouseHSA = parseFloat(document.getElementById('spouseHSA').value) || 0;
-            const spouseTaxable = parseFloat(document.getElementById('spouseTaxable').value) || 0;
-            const spouseAnnuity = parseFloat(document.getElementById('spouseAnnuity').value) || 0;
-            
-            // Your contributions
-            const contrib401k = parseFloat(document.getElementById('contrib401k').value) || 0;
-            const employerMatch = parseFloat(document.getElementById('employerMatch').value) || 0;
-            const contribRoth = parseFloat(document.getElementById('contribRoth').value) || 0;
-            const contribHSA = parseFloat(document.getElementById('contribHSA').value) || 0;
-            const contribTaxable = parseFloat(document.getElementById('contribTaxable').value) || 0;
-            
-            // Spouse contributions
-            const spouseContribSEP = parseFloat(document.getElementById('spouseContribSEP').value) || 0;
-            const spouseContribRoth = parseFloat(document.getElementById('spouseContribRoth').value) || 0;
-            const spouseContribHSA = parseFloat(document.getElementById('spouseContribHSA').value) || 0;
-            const spouseContribTaxable = parseFloat(document.getElementById('spouseContribTaxable').value) || 0;
-            
-            // Calculate growth for your accounts (to YOUR retirement)
-            let total401k = balance401k;
-            let totalRoth = balanceRoth;
-            let totalHSA = balanceHSA;
-            let totalTaxable = balanceTaxable;
-            
-            for (let year = 0; year < yearsToRetirement; year++) {
-                total401k = (total401k + contrib401k + employerMatch) * (1 + returnRate);
-                totalRoth = (totalRoth + contribRoth) * (1 + returnRate);
-                totalHSA = (totalHSA + contribHSA) * (1 + returnRate);
-                totalTaxable = (totalTaxable + contribTaxable) * (1 + returnRate);
-            }
-            
-            // Calculate growth for spouse accounts (to SPOUSE's retirement)
-            let totalSpouseTraditional = spouseRolloverIRA + spouseSEPIRA + spouseAnnuity;
-            let totalSpouseRoth = spouseRothIRA;
-            let totalSpouseHSA = spouseHSA;
-            let totalSpouseTaxable = spouseTaxable;
-            
-            for (let year = 0; year < spouseYearsToRetirement; year++) {
-                totalSpouseTraditional = (totalSpouseTraditional + spouseContribSEP) * (1 + returnRate);
-                totalSpouseRoth = (totalSpouseRoth + spouseContribRoth) * (1 + returnRate);
-                totalSpouseHSA = (totalSpouseHSA + spouseContribHSA) * (1 + returnRate);
-                totalSpouseTaxable = (totalSpouseTaxable + spouseContribTaxable) * (1 + returnRate);
-            }
-            
+
+            // Initialize totals by category and owner
+            let total401k = 0;  // Self traditional (for backward compatibility with old code)
+            let totalRoth = 0;  // Self Roth
+            let totalHSA = 0;   // Self HSA
+            let totalTaxable = 0; // Self Taxable
+
+            let totalSpouseTraditional = 0;
+            let totalSpouseRoth = 0;
+            let totalSpouseHSA = 0;
+            let totalSpouseTaxable = 0;
+
+            // Calculate growth for each account
+            accounts.forEach(account => {
+                const typeInfo = accountTypes[account.type];
+                const years = account.owner === 'self' ? yearsToRetirement : spouseYearsToRetirement;
+
+                // Calculate future value with contributions (including employer match for 401k)
+                let futureValue = account.balance;
+                const totalAnnualContrib = account.annualContribution + (account.employerMatch || 0);
+                for (let year = 0; year < years; year++) {
+                    futureValue = (futureValue + totalAnnualContrib) * (1 + returnRate);
+                }
+
+                // Add to appropriate total based on owner and category
+                if (account.owner === 'self') {
+                    if (typeInfo.category === 'traditional') {
+                        total401k += futureValue;
+                    } else if (typeInfo.category === 'roth') {
+                        totalRoth += futureValue;
+                    } else if (typeInfo.category === 'hsa') {
+                        totalHSA += futureValue;
+                    } else if (typeInfo.category === 'taxable') {
+                        totalTaxable += futureValue;
+                    }
+                } else {  // spouse
+                    if (typeInfo.category === 'traditional') {
+                        totalSpouseTraditional += futureValue;
+                    } else if (typeInfo.category === 'roth') {
+                        totalSpouseRoth += futureValue;
+                    } else if (typeInfo.category === 'hsa') {
+                        totalSpouseHSA += futureValue;
+                    } else if (typeInfo.category === 'taxable') {
+                        totalSpouseTaxable += futureValue;
+                    }
+                }
+            });
+
             return {
                 // Your accounts at YOUR retirement
                 total401k,
@@ -1034,96 +1240,53 @@
             const spouseAge = parseInt(document.getElementById('spouseAge').value) || 29;
             const spouseRetirementAge = parseInt(document.getElementById('spouseRetirementAge').value) || 65;
             const returnRate = parseFloat(document.getElementById('returnRate').value) / 100 || 0.07;
-            
+
             const yearsToRetirement = retirementAge - currentAge;
             const spouseYearsToRetirement = spouseRetirementAge - spouseAge;
 
-            // Your balances and contributions
-            const balance401k = parseFloat(document.getElementById('balance401k').value) || 0;
-            const balanceRoth = parseFloat(document.getElementById('balanceRoth').value) || 0;
-            const balanceHSA = parseFloat(document.getElementById('balanceHSA').value) || 0;
-            const balanceTaxable = parseFloat(document.getElementById('balanceTaxable').value) || 0;
-            
-            const contrib401k = parseFloat(document.getElementById('contrib401k').value) || 0;
-            const employerMatch = parseFloat(document.getElementById('employerMatch').value) || 0;
-            const contribRoth = parseFloat(document.getElementById('contribRoth').value) || 0;
-            const contribHSA = parseFloat(document.getElementById('contribHSA').value) || 0;
-            const contribTaxable = parseFloat(document.getElementById('contribTaxable').value) || 0;
-
-            // Spouse balances and contributions
-            const spouseRolloverIRA = parseFloat(document.getElementById('spouseRolloverIRA').value) || 0;
-            const spouseSEPIRA = parseFloat(document.getElementById('spouseSEPIRA').value) || 0;
-            const spouseRothIRA = parseFloat(document.getElementById('spouseRothIRA').value) || 0;
-            const spouseHSA = parseFloat(document.getElementById('spouseHSA').value) || 0;
-            const spouseTaxable = parseFloat(document.getElementById('spouseTaxable').value) || 0;
-            const spouseAnnuity = parseFloat(document.getElementById('spouseAnnuity').value) || 0;
-            
-            const spouseContribSEP = parseFloat(document.getElementById('spouseContribSEP').value) || 0;
-            const spouseContribRoth = parseFloat(document.getElementById('spouseContribRoth').value) || 0;
-            const spouseContribHSA = parseFloat(document.getElementById('spouseContribHSA').value) || 0;
-            const spouseContribTaxable = parseFloat(document.getElementById('spouseContribTaxable').value) || 0;
+            // Calculate to the later retirement age
+            const maxYears = Math.max(yearsToRetirement, spouseYearsToRetirement);
 
             const labels = [];
             const totalBalanceData = [];
             const contributionsData = [];
-            
-            let bal401k = balance401k;
-            let balRoth = balanceRoth;
-            let balHSA = balanceHSA;
-            let balTaxable = balanceTaxable;
-            
-            let spouseTraditional = spouseRolloverIRA + spouseSEPIRA + spouseAnnuity;
-            let spouseRoth = spouseRothIRA;
-            let spouseHSABal = spouseHSA;
-            let spouseTaxableBal = spouseTaxable;
-            
-            let totalContributions = balance401k + balanceRoth + balanceHSA + balanceTaxable + 
-                                     spouseRolloverIRA + spouseSEPIRA + spouseRothIRA + 
-                                     spouseHSA + spouseTaxable + spouseAnnuity;
 
-            // Calculate to the later retirement age
-            const maxYears = Math.max(yearsToRetirement, spouseYearsToRetirement);
-            
+            // Initialize account balances with current values
+            const accountBalances = accounts.map(acc => ({
+                ...acc,
+                currentBalance: acc.balance
+            }));
+
+            // Calculate total initial contributions (all starting balances)
+            let totalContributions = accounts.reduce((sum, acc) => sum + acc.balance, 0);
+
             for (let year = 0; year <= maxYears; year++) {
                 const yourAge = currentAge + year;
-                const spouseCurrentAge = spouseAge + year;
                 labels.push(yourAge);
-                
-                let total = bal401k + balRoth + balHSA + balTaxable + 
-                           spouseTraditional + spouseRoth + spouseHSABal + spouseTaxableBal;
-                
-                totalBalanceData.push(total);
+
+                // Calculate total balance across all accounts
+                let totalBalance = 0;
+                accountBalances.forEach(acc => {
+                    totalBalance += acc.currentBalance;
+                });
+
+                totalBalanceData.push(totalBalance);
                 contributionsData.push(totalContributions);
 
-                // Grow your accounts (stop contributing after YOUR retirement)
-                if (year < yearsToRetirement) {
-                    bal401k = (bal401k + contrib401k + employerMatch) * (1 + returnRate);
-                    balRoth = (balRoth + contribRoth) * (1 + returnRate);
-                    balHSA = (balHSA + contribHSA) * (1 + returnRate);
-                    balTaxable = (balTaxable + contribTaxable) * (1 + returnRate);
-                    totalContributions += contrib401k + employerMatch + contribRoth + contribHSA + contribTaxable;
-                } else {
-                    // After your retirement, just grow with no contributions
-                    bal401k *= (1 + returnRate);
-                    balRoth *= (1 + returnRate);
-                    balHSA *= (1 + returnRate);
-                    balTaxable *= (1 + returnRate);
-                }
-                
-                // Grow spouse accounts (stop contributing after SPOUSE's retirement)
-                if (year < spouseYearsToRetirement) {
-                    spouseTraditional = (spouseTraditional + spouseContribSEP) * (1 + returnRate);
-                    spouseRoth = (spouseRoth + spouseContribRoth) * (1 + returnRate);
-                    spouseHSABal = (spouseHSABal + spouseContribHSA) * (1 + returnRate);
-                    spouseTaxableBal = (spouseTaxableBal + spouseContribTaxable) * (1 + returnRate);
-                    totalContributions += spouseContribSEP + spouseContribRoth + spouseContribHSA + spouseContribTaxable;
-                } else {
-                    // After spouse's retirement, just grow with no contributions
-                    spouseTraditional *= (1 + returnRate);
-                    spouseRoth *= (1 + returnRate);
-                    spouseHSABal *= (1 + returnRate);
-                    spouseTaxableBal *= (1 + returnRate);
-                }
+                // Grow each account for next year
+                accountBalances.forEach(acc => {
+                    const yearsToOwnerRetirement = acc.owner === 'self' ? yearsToRetirement : spouseYearsToRetirement;
+
+                    if (year < yearsToOwnerRetirement) {
+                        // Still contributing: add contribution + employer match then grow
+                        const totalAnnualContrib = acc.annualContribution + (acc.employerMatch || 0);
+                        acc.currentBalance = (acc.currentBalance + totalAnnualContrib) * (1 + returnRate);
+                        totalContributions += totalAnnualContrib;
+                    } else {
+                        // After retirement: just grow with no contributions
+                        acc.currentBalance *= (1 + returnRate);
+                    }
+                });
             }
 
             const finalBalance = totalBalanceData[totalBalanceData.length - 1];
@@ -1820,7 +1983,7 @@
         async function getAIInsights() {
             const insightsPanel = document.getElementById('aiInsights');
             const contentDiv = document.getElementById('aiContent');
-            
+
             insightsPanel.style.display = 'block';
             contentDiv.innerHTML = '<span class="loading">Analyzing your strategy</span>';
 
@@ -1830,18 +1993,25 @@
             const taxBracket = parseFloat(document.getElementById('taxBracket').value) || 22;
 
             const balances = getRetirementBalances();
-            const totalBalance = balances.total401k + balances.totalRoth + balances.totalHSA + balances.totalTaxable;
-            
-            const contrib401k = parseFloat(document.getElementById('contrib401k').value) || 0;
-            const employerMatch = parseFloat(document.getElementById('employerMatch').value) || 0;
-            const contribRoth = parseFloat(document.getElementById('contribRoth').value) || 0;
-            const contribHSA = parseFloat(document.getElementById('contribHSA').value) || 0;
-            const contribTaxable = parseFloat(document.getElementById('contribTaxable').value) || 0;
-            const totalAnnualContrib = contrib401k + employerMatch + contribRoth + contribHSA + contribTaxable;
+            const totalBalance = balances.total401k + balances.totalRoth + balances.totalHSA + balances.totalTaxable +
+                                balances.totalSpouseTraditional + balances.totalSpouseRoth +
+                                balances.totalSpouseHSA + balances.totalSpouseTaxable;
+
+            // Summarize current accounts by category
+            const currentTraditional = accounts.filter(a => accountTypes[a.type].category === 'traditional')
+                .reduce((sum, a) => sum + a.balance, 0);
+            const currentRoth = accounts.filter(a => accountTypes[a.type].category === 'roth')
+                .reduce((sum, a) => sum + a.balance, 0);
+            const currentHSA = accounts.filter(a => accountTypes[a.type].category === 'hsa')
+                .reduce((sum, a) => sum + a.balance, 0);
+            const currentTaxable = accounts.filter(a => accountTypes[a.type].category === 'taxable')
+                .reduce((sum, a) => sum + a.balance, 0);
+
+            const totalAnnualContrib = accounts.reduce((sum, a) => sum + a.annualContribution + (a.employerMatch || 0), 0);
 
             const prompt = `I'm planning for retirement:
 - Age: ${currentAge}, Retirement: ${retirementAge}
-- Current: 401k $${(parseFloat(document.getElementById('balance401k').value) || 0).toLocaleString()}, Roth $${(parseFloat(document.getElementById('balanceRoth').value) || 0).toLocaleString()}, HSA $${(parseFloat(document.getElementById('balanceHSA').value) || 0).toLocaleString()}, Taxable $${(parseFloat(document.getElementById('balanceTaxable').value) || 0).toLocaleString()}
+- Current: Traditional $${currentTraditional.toLocaleString()}, Roth $${currentRoth.toLocaleString()}, HSA $${currentHSA.toLocaleString()}, Taxable $${currentTaxable.toLocaleString()}
 - Annual contributions: $${totalAnnualContrib.toLocaleString()}
 - Expected return: ${returnRate}%, Tax bracket: ${taxBracket}%
 - Projected at retirement: $${totalBalance.toLocaleString(undefined, {maximumFractionDigits: 0})}
@@ -1874,6 +2044,8 @@ Provide 3-4 concise insights about my strategy focusing on: tax diversification 
         }
 
         // Initialize on load
+        loadAccounts();
+        renderAccounts();
         calculateAll();
     </script>
 </body>
